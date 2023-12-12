@@ -1,0 +1,71 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+\usepackage{tikz}
+\usepackage{enumitem}
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{7}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{1}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Solution}\\
+Claim: Any instance of Vertex Cover can be solved using Hitting Set.
+\begin{proof}
+	First, we must show a certificate for Hitting Set. Given a set $A$, and collection of sets $B_{1},B_{2},...,B_{m}$ we can check if $H$ is a hitting set by showing $H \cap B_{i} \ne \{\}$. We can simply check if for all elements $h \in H$, some element $h$ is in $B_{i}$ for $0\le i \le m$. If no element $h$ is in a subset $B_{i}$ then $H$ is not a Hitting Set. This takes time proportional to the size of $H$ and to the size of all subsets $B_{i}$.\\
+	Let $G=(V,E)$ be a graph. We want to show that we can find a vertex cover for $G$ of size at most $k$ by solving the Hitting Set problem. First, we must transform an instance of vertex cover to an instance of the hitting set problem. We can make every vertex of $G=\{v_{1},v_{2},...,v_{n}\}$ an element of a set $A=\{v_{1},v_{2},...,v_{n}\}$. Vertices $u\mbox{ and }v$ are in the same subset of the collection if they are connected by an edge. Thus, we have converted a vertex cover problem to a hitting set problem.\\
+	A vertex cover $C$ of $G$ gives us a hitting set for this reduces problem, because vertices in $C$ are incident to every edge. Elements of $C$ are elements of a hitting set because subsets of $A$ are made up of indicent vertices, and elements of $C$ are indicent to every edge. Now, we can find a hitting set $H$ of $A$ of size at most $k$ in polynomial time. This set $H$ contains at least one element from each subset in the collection, so an element $h_{i}$ is connected to all vertices of subset $B_{i}$. This means that the elements of $H$ are incident to all edges of $G$, because they connect to all vertices of our collection. 
+\end{proof}
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

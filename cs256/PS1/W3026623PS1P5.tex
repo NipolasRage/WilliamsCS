@@ -1,0 +1,105 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{1}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{5}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} Nevin Bernet
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Notes to Instructor or TA:} If needed, include here any special notes for TAs or instructor; delete if no notes
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+{\em Free-style:} Suppose you are given a set $S$ of $n$ intervals---that is, $n$ pairs $\{(s_1,t_1), \ldots, (s_n,t_n)\}$ of numbers with each $s_i < t_i$.
+\begin{description}
+	\item [(a)] Design an algorithm to find the maximum sized subset of $S$ such that every pair of intervals in the subset overlap and prove that your algorithm works correctly in all cases.
+	
+	\emph{Suggestion:} Draw some pictures.  See if you can identify any helpful properties that hold for any subset of intervals such that all of the intervals in the subset intersect pairwise (if you use such a property, though, you must prove that it holds!).
+	Did I say "Draw some pictures"?  Yes.  Yes, I did. Imagine processing the intervals in, say, left-to-right order.
+	\item [(b)] Describe an implementation of your algorithm, including any appropriate data structures, and determine its time and space requirements.  Pseudo-code can be helpful, but is insufficient on its own (and is also not required).  A clear, concise prose description of an algorithm should be considered a necessity for your response to be complete.
+\end{description}
+  
+\textbf{Solution}
+\begin{algorithm*}[h] 
+	\caption{Biggest Interval} 
+	\begin{algorithmic}[1] 
+		\REQUIRE Set $S$
+		\medskip 
+		\STATE $S* \leftarrow$ empty set
+		\STATE$Result \leftarrow S*$
+		\STATE $A \leftarrow$ array
+		\STATE Put $s_{i}$ and $t_{i}$ in $A$ $\forall\ i\  \ 1\le i \le n$ 
+		\STATE Sort $A$
+		\FOR{$i\leftarrow 0$ to size of $A$} 
+		\STATE $e \leftarrow A[i]$
+		\IF{$e$ is a starting time}
+		\STATE add $e$ to $S*$
+		\ELSE 
+		\STATE $Result \leftarrow S*$ only if $S*>Result$
+		\STATE  remove $s_{i}$ that corresponds with $e$ from $S*$
+		\ENDIF
+		\ENDFOR
+		\RETURN $Result$
+	\end{algorithmic} 
+\end{algorithm*} 
+\\a)  If $S$ is empty then the algorithm returns an empty set. Consider first instance of $t_{i}$ in $A$. $S*$ holds all of the intervals that overlap with the first $s$ added to $S*$. At this point, $S*$ can either hold the largest subset of overlapping intervals or not. If it does, then $Result$ will take the value of $S*$. If it does not, then $Result$ will keep its old value until a larger $S*$ appears. $s_{i}$ will be removed from $S*$ and the algorithm repeats, adding overlapping intervaks to $S*$ and comparing the set to $Result$.
+\\b)  The pairs $s_{i}$ and $t_{i}$ will each be objects that are able to hold their index $i$ as an instance variable, and point to their value pair. The Set $S*$ will be a linked list where adding to the front is constant time while looking up the corresponding $s_{i}$ will be linear time. The sorting of $A$ will occur in $O(n\log n)$ time. As we walk through $A$, we add the starting numbers to $S*$ and if we see an end number we look for the corresponding starting time and remove it. Before removing, we have to check if that state of $S*$ is the biggest we have seen thus far. 
+\\ Time Complexity: Sorting $O(n\log n)$ + Loop $O(n)*O(n)=$ $O(n\log n+n^{2}) = O(n^{2})$
+\\ Space Requirement: Array $O(2n)$ + $S*\ O(n)$ + Result $O(n)$ = $O(4n) = O(n)$
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

@@ -1,0 +1,77 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+\usepackage{tikz}
+\usepackage{enumitem}
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{8}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{3}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} went to TA sessions 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Question}\\
+Chapter 10, Problem 2.
+(a) Hint: See if you can figure out how to break the problem into subproblems that give the recursion
+$T(n,d) = 3 T(n,d-1) + p(n)$ for some polynomial $p()$; then solve the recurrence.
+(b) Hint: Think about the two assignments that set every variable to 0 and every variable to 1, respectively.  How far can an arbitrary assignment $\Phi$ simultaneously be from these two assignments?  Divide and conquer....\\
+\textbf{Solution}\\
+a) Run Time: $O(3^{d}*p(n))$
+\begin{proof}
+	Base Case: Let $d=0$. If Explore($\Phi$,d) returns "yes" then $\Phi$ is a satisfying assignment that is at most $d$ distance away from $\Phi$. Also, if Explore($\Phi$,d) returns "no" then $\Phi$ is not a satisfying assignment.\\
+	Inductive Hypothesis: Let $k\ge 0$ and suppose the algorithm returns "yes" if and only if there exists a satisfying assignment $\Phi$′ such that the distance from $\Phi$ to $\Phi$' is at most $k$.\\
+	Inductive Sep: If Explore($\Phi,k+1$) returns "yes," then one of the recursive calls to Explore($\Phi_{i}$,k) returned "yes." Using our inductive hypothesis, we know that $\Phi_{i}$ has distance $k$ to a satisfying assignment. Thus, $\Phi$ has distance at most $k+1$ to a satisfying assignment. Conversely, suppose $\Phi$ has distance $k+1$ to a satisfying assignment $\Phi$'. Let $C$ be a clause unsatisfied by $\Phi$. Since $\Phi$' satisfies $C$, then it must disagree with $\Phi$ in at least one variable. Thus, one of the assignments $\Phi_{i}$ that changes this variable is $k$ distance away from $\Phi$'. By the inductive hypothesis, this call returns "yes" so the call Explore($\Phi,k+1$) returns "yes."
+\end{proof}
+b) Let $\Phi_{0}$ be an assignment of variables such that they are all set to 0 and $\Phi_{1}$ be an assignment of variables such that they are all set to 1. A satisfying assignment will be at a distance of at most $n/2$ from one of these two assignments. We call Explore($\Phi_{0}$,n/2) and Explore($\Phi_{1}$,n/2) and see if either returns "yes." The running time of each call is $O(p(n)*3^{n/2})=O(p(n)*(\sqrt{3})^n)$
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

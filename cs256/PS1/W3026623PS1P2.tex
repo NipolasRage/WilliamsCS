@@ -1,0 +1,96 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{1}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{2}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} Nevin Bernet
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Notes to Instructor or TA:} If needed, include here any special notes for TAs or instructor; delete if no notes
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+Decide whether you think the following statements are true or false.  If a statement is true, give a short explanation why it's the case.  If it's false, give a counterexample.
+\begin{description}
+	\item [(a)] In every instance of the Stable Matching Problem there is a stable matching containing a pair $(m,w)$ such that $m$ was ranked first on the preference list of $w$ and $w$ was ranked first on the preference list of $m$.\\
+	
+	\item [(b)] Consider an instance of the Stable Matching Problem in which there exists a man $m$ and a woman $w$ such that $m$ is ranked first on the preference list of $w$ and $w$ is ranked first on the preference list of $m$.  Then the pair $(m,w)$ belongs to every possible stable matching
+	for this instance. \\
+	
+\end{description}
+  
+\textbf{Solution}
+\begin{enumerate}
+	\item False. Let the following table be an input to the Stable Matching Problem\\
+	\begin{table}[h]
+		\begin{center}
+			\begin{tabular}{r|ccc}
+				Name & \multicolumn{3}{c}{Preference}\\
+				\hline
+				Alice & Bob & Don \\
+				Bertha & Don & Bob  \\
+				Bob & Bertha & Alice  \\
+				Don & Alice & Bertha 
+			\end{tabular}
+		\end{center}
+	\end{table}\\
+In this case, a stable matching will be made even though no two people have each other as their top preference.
+	\item True, a stable matching is defined as one where for every unmatched $\{m, w\}$, either $m$ prefers his match to $w$, or $w$ prefers her match to $m$. Using the P-R algorithm, the man will propose to his first choice, and the woman will be engaged and never trade down, or trade up to get with him if she is taken already.
+\end{enumerate}
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

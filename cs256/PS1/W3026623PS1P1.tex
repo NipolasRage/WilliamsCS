@@ -1,0 +1,90 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{1}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{1}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} Nevin Bernet
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Notes to Instructor or TA:} If needed, include here any special notes for TAs or instructor; delete if no notes
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+Take the following list of functions and arrange them in ascending order of growth rate.  That is, if function $g(n)$ immediately follows function $f(n)$ in your list, then it should be the case that $f(n)$ is $O(g(n))$.  Please prove your claims.
+\begin{enumerate}
+	\item $f_{1}(n) = 2^{\sqrt{(\log n)}}$
+	\item $f_{2}(n)=2^{n}$
+	\item $f_{3}(n)=n^{4/3} = 2^{4/3 \log n}$
+	\item $f_{4}(n)=n(\log n)^{3}$
+	\item $f_{5}(n)=n^{\log n} = 2^{(\log n )^{2}}$
+	\item $f_{6}(n)=2^{2^{n}}$
+	\item $f_{7}(n)=2^{n^{2}}$
+\end{enumerate}
+  
+\textbf{Solution}
+\begin{enumerate}
+	\item $f_{1}(n) = 2^{\sqrt{(\log n)}}$
+	\item $f_{4}(n)=n(\log n)^{3}:$ $\sqrt{(\log n)}$ grows very slowly, so the 2 in $f_{1}$ will be raised to small exponents. 
+	\item $f_{3}(n)=n^{4/3} = 2^{4/3 \log n}:$ $\lim_{n\to\infty} \frac{n(\log n)^{3}}{n^{4/3}} = \lim_{n\to\infty} \frac{(\log n)^{3}}{n^{1/3}} = \lim_{n\to\infty} \frac{(\log n)}{n^{1/9}} = 0$ as exponentials grow faster than logarithms (shown in class).
+	\item $f_{5}(n)=n^{\log n} = 2^{(\log n )^{2}}:$ Assuming this is in base 2, $(\log n)^{2}$ grows faster than $4/3 \log n$ when $n>2^{4/3}$. 
+	\item $f_{2}(n)=2^{n}:$ $n$ grows faster than $(\log n)^{2}$.
+	\item $f_{7}(n)=2^{n^{2}}:$ $n^{2}$ grows faster than $n$.
+	\item $f_{6}(n)=2^{2^{n}}:$ $2^{n}$ grows faster than $n^{2}$ (discussed in class).
+\end{enumerate}
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

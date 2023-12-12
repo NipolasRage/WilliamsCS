@@ -1,0 +1,117 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+\usepackage{enumitem}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{3}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{5}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+An Euler\footnote{Named after Leonhard Euler (1707-1783) who solved part (a) in 1735}
+tour of a graph $G$ is a circuit (that is, a path that begins and ends at the same vertex), through $G$ that traverses every edge of $G$ exactly once. 
+\begin{description}
+	\item [(a)] Prove that a connected graph $G$ has an Euler tour if and only if every vertex has even degree. 
+	\item [(b)] Describe and analyze a linear time algorithm to compute an Euler tour in a given graph, or correctly 
+	report that no such tour exists. 
+\end{description}
+\textbf{Solution}\\
+ a) Assume, for the sake of contradiction, that a vertex $v$ in a connected graph G that has an Euler tour has odd degree. Once we visit $v$ through an edge, we need to leave it through another edge, meaning that visiting and leaving $v$ takes two edges. Since $v$ has odd degree, we will encounter a situation that we have visited all but one edges incident to $v$. At this point, we visit the last unvisited edge and end up in $v$. Now, we do not have any other unvisited edges so we would have to use a visited edge to leave $v$.  We arrive at a contradiction, so if $G$ has an Euler tour, then every vertex of $G$ has even degree.\\
+	Let $G$ be a connected graph such that all of its vertices have even degree. Now we must proof that $G$ has an Euler circut because of this. We can proof this by strong induction:\\
+	Base Case: Let $N$ be a connected graph containing zero edges. This implies that there is only one node in $N$ as a node is connected to itself. We notice $N$ has an Euler tour as we can visit this node by starting our tour from it.\\
+	Inductive Hypothesis: Assume that a graph of $i$ edges, where $0 \le i \le k$ for some integer $k$, contains an Euler tour, with the condition that each vertex in the graph has even degree.\\
+	Inductive Step: We must now show that a graph with $k+1$ edges where all vertices have even degree contains an Euler tour. Let $G$ be such connected graph with $k+1$ edges with all its vertices having even degree. We know that $G$ contains a circut, because its vertices have even degrees and we can always travel back to a vertex. Let us remove a circuit $c$ from $G$. By doing so we now have subgraphs of $G$ with each having less than $k+1$ edges. From our inductive hypothesis we know these subgraphs contain Euler tours. We also know these subgraphs are all connected to $c$ because if they were not, then our graph would not be connected. We can start a tour by picking a vertex of $c$ and walking around it until we reach said vertex again. When we reach one of the subgraphs we can do an Euler tour on it and come back from the node where we entered it. We do this for all subgraphs connecting to $c$ until we reached the vertex where we started our tour from. We walked through every edge of $c$ as well as every edge of every subgraph exactly one. We also visited every vertex of $G$. Thus, $G$ contains an Euler circuit because it has vertices of even degrees.\\
+	b) \begin{algorithm*}[h] 
+		\caption{Find Euler Tour} 
+		\begin{algorithmic}
+			\State $C$ is our sequence containting the Euler tour.
+			\State $s$ is our starting vertex
+			\State Prework:
+			\For {every vertex $i$ in our graph} 
+			\If {$i$ has odd degree}
+			\State return error.
+			\EndIf
+			\EndFor
+			\Function{Euler}{$G$,$C$,$s$}
+			\State Walk through an edge incident of $s$
+			\While {current vertex $v \ne s$ }
+			\State remove edge used to get to $v$
+			\State move through another indicent edge
+			\EndWhile
+			\State Begin walking down same path as before
+			\State add $s$ to $C$
+			\While {current vertex $u \ne s$}
+			\State add $u$ to $C$
+			\If {$degree(u) \ne 0$}
+			\State $P \leftarrow$ subgraph containing $u$
+			\State $Euler(P,C,u)$
+			\EndIf
+			\EndWhile
+			\State add $s$ to $C$
+			\State \Return $C$
+			\EndFunction
+		\end{algorithmic}
+	\end{algorithm*} 
+Algorithm in page below.\\
+If our graph has a vertex with odd degree, then our prework will be able to identify this and return an error. Now, suppose there is an edge $e$ in $G$ that is unvisited. If we did not encounter $e$ in the first while loop, when we look at the circuit containing $s$, then $e$ must be in a subgraph. However, we also look at all the ciruits in the subgraphs. We also know that there will keep existing circuits because every vertex has even degree and when we look for the circuits we always remove two edges at a time, the one going into a vertex and the one going out. So if it is not in the first circuit we walked through nor in any cuircuit in any subgraph, then $e$ is not in $G$. We have reached a contradiction as $e$ cannot be both in and not in $G$. Thus, this algorithm finds an Euler tour.\\
+Runtime: We go over every edge randomly once. We walk through this path again, going over those edges we had not visited twice. $O(|V|+|E|)$\\
+Space Requirement: relative to number of edges $O(|E|)$
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

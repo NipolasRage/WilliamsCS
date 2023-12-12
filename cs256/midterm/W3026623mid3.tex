@@ -1,0 +1,67 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Midterm \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\ProblemNumber}{3}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+
+\textbf{Solution}
+\\ This algorithm will use a divide-and-conquer approach to determine if an ordered $N=n\mbox{ x }n$ matrix $M$ contains the integer $x$. We will begin by finding the element $y$ in the $"middle"$ of $M$. We then compare $x$ to said element $y$, and if $x$ is equal to $y$ then we return \texttt{true}. Now, imagine $M$ being divided into four square submatrices. If $x$ is greater than $y$ we can ignore the top left submatrix and run our algorithm on all of the three remaining submatrices. On the other hand, if $x$ happens to be less than $y$, then we ignore the bottom right submatrix and run our algorithm on the remaining three submatrices. If at any point $x$ equals the $"middle"$ of a submatrix, then we return \texttt{true}; however, if we keep dividing the matrix and running our algorithm until the matrices are single cells and none of these cells are equal to $x$ then we return \texttt{false}.
+\\Time Complexity: Finding the $"middle"$ element of a matrix takes constant time, comparing $x$ to the $"middle"$ element of a matrix also takes constant time, we run our algorithm again on three submatrices of size at most $\frac{N}{4}$. We can form the following recurrence relation: $T(N)\le cN^{0}+3T(\frac{N}{4})$. Using the Master Theorem we determine that the runtime for this algorithm is $O(N^{\log_{4}3})$.\\
+\begin{proof}
+	Base Case: If our matrix is of size $1\mbox{ x }1$, then we simply compare $x$ to the element of said matrix. This element happens to be the middle, so we return \texttt{true} if $x$ equals this element or \texttt{false} if they do not equal.\\
+	Inductive Hypothesis: Assume our algorithm determines whether an ordered matrix of size up to $K=k\mbox{ x }k$ contains the element $x$ where $K\ge 1$.\\
+	Inductive Hypothesis: We must show that our divide-and-conquer approach accurately determines if $x$ is an element of an ordered $K+1 = k+1\mbox{ x }k+1$ matrix $M^{*}$. We can easily compare $x$ to the $"middle"$ element $y$ of $M^{*}$. If $x$ equals $y$ then our algorithm returns \texttt{true} and it works. Now, if $x$ does not equal $y$ we take the divide-and-conquer approach. We can partition $M^{*}$ into four square submatrices occupying each quadrant of $M^{*}$ (Note that these submatrices are also ordered). The reason we do not run our algorithm on all four submatrices is because all elements of the upper left submatrix are less than $y$, while all elements of the lower right submatrix are greater than $y$. Thus, we only run our algorithm on the three submatrices where $x$ is certain to be found. Notice that these submatrices are of size less than $K+1$, and according to our inductive hypothesis, our algorithm will determine whether or not $x$ is in these ordered matrices. We have shown that our algorithm will always determine whether an element $x$ is in an ordered square matrix.
+\end{proof}
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

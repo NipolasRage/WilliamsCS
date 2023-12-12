@@ -1,0 +1,90 @@
+\documentclass[10pt]{article}
+
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty} %For centering section headings
+
+%\textwidth 7in
+%\textheight 9.5in
+
+
+\pagestyle{fancy}
+
+\chead{CSci 256: Algorithm Design \& Analysis}
+\lhead{Assignment 5}
+\rhead{Spring 2018}
+\lfoot{Due: 11:00 pm, 15 March, 2018}
+\rfoot{\thepage}
+\cfoot{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+%\renewcommand{\footwidth}{\textwidth}
+%\addtolength{\headwidth}{\marginparwidth}
+%\addtolength{\headwidth}{\marginparsep}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\begin{document}
+
+\allsectionsfont{\centering}
+
+\section*{The One-Page, 3-Problem, Pre-Spring-Break Problem Set}
+
+\begin{question}{Warm-up}
+
+Answer Exercise 1 (page 312) in Chapter 6 of your text.  For part (c) include a justification of correctness and a time/space complexity analysis.
+\end{question}
+
+\begin{question}{Text Processing}
+
+Answer Exercise 6 (page 317) in Chapter 6 of your text.  Include the requisite justification of correctness and complexity analysis.  Also address the following: Why do you think the problem has you minimize the sum of the {\em squares} of the slack of each line, as opposed to the the sum of the slacks themselves or of the absolute values of the slacks.
+
+By the way, in the sentence ``The difference between the left-hand side and the right-hand side will be called the {\em slack} of the line..." the authors are referring to the left-hand side and the right-hand side of the inequality.
+
+Hint: Wouldn't it be useful to know all possible potential slack values...?
+\end{question}
+
+\begin{question}{Optimal Matrix Multiplication}
+
+If you are familiar with matrix multiplication, you can skip down to \textbf{The Problem};
+otherwise read the next few paragraphs first.
+
+Given two vectors $u = (u_1, \ldots, u_n)$ and $v= (v_1, \ldots, v_n)$ the {\em dot product}
+(a.k.a. {\em inner product}) of $u$ and $v$ is given by
+$u \cdot v =  u_1 v_1 + \ldots + u_n v_n$.  Note that it takes $n$ scalar multiplications to compute the dot product of two vectors of length $n$.
+
+Now suppose that $A$ and $B$ are $n \times q$ and $q \times m$ matrices (arrays), respectively.  The {\em product} of $A$ and $B$ is the $n \times m$ matrix $P$ for which $P[i,j]$  is the dot product of row $i$ of $A$ with column $j$ of $B$.  Note that this is well-defined since the rows of $A$ and the columns of $B$ are all vectors of length $q$.  This operation is referred to as {\em matrix multiplication}.
+
+If you aren't familiar with matrix multiplication, don't worry.  Here are the only things you need to know to answer this question.
+\begin{itemize}
+\item Computing the product $A B$ by directly using the definition above requires $n q m$ scalar multiplications: There are $n m$ entries, and each requires $O(q)$ multiplications to compute.
+\item In general, $A B \not= B A$: Matrix multiplication is {\em not} commutative, so don't even try!
+\item Matrix multiplication is {\em associative}: ((A B) C) = (A (B C)).  That is, a product $A_1 \ldots A_k$ can be parenthesized in any order without changing the value of the result. 
+\end{itemize}
+
+\textbf{The Problem}
+
+While the order of evaluation of a chain $A_1 \ldots A_k$ of matrices may not affect the value of the result, it can greatly affect the time required to compute the result!  For example.  If $A, B, C$ have sizes $3 \times 20$, $20 \times 4$ and $4 \times 10$ respectively, then 
+\begin{description}
+\item{Computing $((A B) C)$} takes $3 \cdot 20 \cdot 4$ scalar multiplications for $A B$, which is a $3 \times 4$ matrix, plus $3 \cdot 4 \cdot 10$ scalar multiplications for multiplying $A B$ by $C$, giving a total of 240 + 120 = 360 scalar multiplications.
+\item{Computing $(A (B C))$} takes $20 \cdot 4 \cdot 10$ scalar multiplications for $B C$, which is a $20 \times 10$
+matrix, plus $3 \times 20 \times 10$ scalar multiplications for multiplying $A$ by  $(B C)$, giving a total of 800 + 600 = 1400 scalar multiplications.
+\end{description}
+
+So, consider a product $A_1 \ldots A_k$ of matrices where each $A_i$ has size $r_i \times c_i$.  Assume that $c_i = r_{i+1}$ for $i = 1 \ldots n-1$, so that the product of two consecutive matrices is well-defined.
+We call an order of evaluation (a particular parenthesizing) of the product $A_1 \ldots A_k$ {\em optimal} if it uses the minimum number of scalar multiplications.
+\begin{description}
+\item{[a]} Design a dynamic programming algorithm to compute the number of scalar multiplications in an optimal order of evaluation for $A_1 \ldots A_k$.  Justify its correctness.
+(Hint: Think about the final matrix multiplication that happens in the ordering.)
+\item{[b]} Determine the time and space complexity of your algorithm.
+\item{[c]} Describe how you would modify your algorithm to report the (or an) optimal order.  What is the complexity of this algorithm.
+\end{description}
+\end{question}
+
+\end{document}

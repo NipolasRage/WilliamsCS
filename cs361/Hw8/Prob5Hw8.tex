@@ -1,0 +1,15 @@
+%!TEX root = Hw8Template.tex
+
+\begin{quote}
+Given a Turing machine $M$ and an input $w$, does $M$ ever change the contents of a tape cell while processing $w$? 	
+\end{quote}
+
+
+\begin{solution}
+
+% Place your answers here
+$A_{cell\Delta} = \{\langle M,w \rangle ~|~ M\} \mbox{ is a Turing Machine that changes the}\\ \mbox{ contents of its tape on input } w   \}$\\
+This is decideable. We can simulate $M$ on input $w$ and keep track of every configuration reached. If $M$ ever changes the content of its tape then we accept. Also, if the same configuration was reached more than once, then we know we have entered a loop so we terminate and reject. Additionally, if the machine moves to the right the same amount of times as the number of states after the last character of the input then we terminate. This is because there would not be a way to go back to the part of the tape containing the input.
+
+
+\end{solution}

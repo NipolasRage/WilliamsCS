@@ -1,0 +1,17 @@
+% !TEX root = Hw9Template.tex
+
+%LOOK IN PROBLEM SOLUTION FILE FOR IDEAS FOR NEW PROBLEMS.
+
+Consider the language:
+
+$CONTAINSPAL_{DFA} =$
+	\[  \{ \langle M \rangle ~|~ M \mbox{ is a DFA and } ww^R \in L(M) \mbox{ for some } w \in \Sigma_M^* \}
+	\]	
+	Determine whether this language is decidable, undecidable but recognizable, not recognizable but has a recognizable complement or that neither the language or its complement is recognizable. Justify your conclusion.
+	
+\begin{solution}
+
+% Place your answers here
+This language is decidable. We can build a non-deterministic PDA $P$ that recognizes the palindromes over the language $\Sigma_M^*$. $P$ works by guessing the middle of the string and pushing the first half onto the stack. Then, it checks the second half with the elements of the stack, popping on a match and rejecting the string on a mismatch. When a string's first and last half match, it is accepted. Now let $L = L(P)$ be the language containing the palindromes over $\Sigma_M^*$. The intersection $L \cap L(M)$ results in the palindromes accepted by $M$. All we have to do now, is determine if $L \cap L(M)$ is empty. If it is, then for all $w \in \Sigma_M^*, ~ ww^R \notin L(M)$, if not then we know that $L(M)$ contains a palindrome. We know that the intersection of a context-free language and a regular language is context-free, so we can find a grammar $G$ that produces $L \cap L(M)$. From class, we know that $E_{CFG}$ is a decidable language. Thus, we can build a Turing machine for $E_{CFG}$, and if it accepts $G$ then we know $ww^R \in L(M) \mbox{ for some } w \in \Sigma_M^*$, whereas if it rejects $G$ then $L(M)$ does not contain palindromes.
+
+\end{solution}

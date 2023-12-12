@@ -1,0 +1,27 @@
+% !TEX root = HwXTemplate.tex
+
+Consider the {\sc Subset Sum} problem:  given a set of positive integers $X=\{x_{1}, \ldots, x_{n}\}$ and a positive integer $T$, we ask if there exists a subset $X' \subseteq X$ such that \[\sum_{x \in X'} x = T.\]  {\sc Subset Sum} is NP-complete.  Note that as stated this is a decision problem. The answer is yes or no rather than a list of numbers.
+
+Show that if P=NP then you can use the polynomial time solution to the decision problem to give a polynomial time solution to the problem of actually finding the subset. Present pseudo-code describing the algorithm and
+justify that it will have polynomial running time by giving an upper bound for its execution time under
+the assumption that the decision problem can be solved in $O(p_d(n))$ time.
+
+\begin{solution}
+
+% Place your answers here
+\begin{itemize}
+	\item Let $S$ be an empty set
+	\item While $T \ne 0$ and $|X| \ne 0$
+	\begin{itemize}
+		\item remove an $x_i$ from $X$ where $0\le i \le |X|$
+		\item solve the decision problem using $X$ and $T-x_i$
+		\item if the answer is yes
+		\begin{itemize}
+			\item add $x_i$ to $S$
+			\item set $T = T - x_i$ 
+		\end{itemize}
+	\end{itemize}
+	\item The set $S$ is a valid subset if one exists, and empty if no sum exists
+\end{itemize}
+This algorithm runs in polynomial time because the while loop will only run at most $|X|$ times. For every run, it will solve the decision problem. Thus, the runtime of this algorithm is $O(|X|p_d(n)) \in O(p_d(n))$
+\end{solution}

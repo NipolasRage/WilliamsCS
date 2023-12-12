@@ -1,0 +1,96 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{enumitem}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{3}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{4}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+In many situations, you might find yourself dealing with a dynamically changing data structure.  One such simple example is that of
+dynamically changing edge weights in a graph.  This problem asks you to consider how you would maintain a minimum-cost spanning tree in
+such an environment.
+
+Suppose you are given a graph $G$ with weighted edges and a minimum spanning tree $T$ of $G$. 
+\begin{description}
+	\item [(a)] Describe and analyze an algorithm to update the minimum spanning tree when the weight of a single edge $e$ is decreased.
+	\item [(b)] Describe and analyze an  algorithm to update the minimum spanning tree when the weight of a single edge $e$ is increased.
+\end{description}
+In both cases, the input to your algorithm is the edge $e$ and its new weight; your algorithms should modify $T$ so that it is still a minimum spanning tree.  {\em Hint:  consider $e \in T$ and $e \not\in T$ separately}.
+  
+\textbf{Solution}
+\begin{enumerate}[label=\Alph*]
+	\item This algorithm will perform a BFS on the tree until we find one of two things. The edge $e = \{u,v\}\in T$  or $e\not\in T$. If $e$ is in the graph then we just update its weight and we are done. Otherwise, we add $e$ to $T$, which adds a cycle, perform another BFS from $v$, marking every node we encounter. If we encountered a node $b$ twice, then we remove the edge of highest weight in this cycle. We now have our updated MCST.\\
+	Runtime: $1^{st}$ BFS $O(|V| + |E|)$ * $2^{nd}$ BFS $O(|V| + |E|)$ * walk through cycle $O(|V| + |E|)= O(3(|V| + |E|)) = O(|V| + |E|)$ 
+	\begin{proof}
+		Performing our first BFS to find the node of destination will tell us where to change $T$. Now we have two cases, $e \in T$ and $e \not\in T$:\\
+		Case $e \in T$: If this is the case then $e$ will be updated to have a lower weight and $T$ mantains its MCST property.\\
+		Case $e \not\in T$: In this case, let $e$ connect vertices $u$ to $v$ in $G$. By performing a BFS and finding $v$ we find the potential spot for $e$ and add it to our tree. This forms a cycle and we want to get rid of the edge that costs the most in this cycle. Removing it will end the cycle and reduce the cost of $T$ so that it keeps its MCST property.
+	\end{proof}
+	\item This algorithm will perform a BFS much like in part $A$ to find one of two things.  The edge $e = \{u,v\}\in T$  or if $e\not\in T$. If $e\not\in T$ then we can increase its weight and be done. If $e \in T$, then we remove it. This disconnects $T$ into two parts, $V$ and $V'$. We perform a BFS from $v$ and mark all of the vertices we visit. Note that these vertices are in $V'$ and not in $V$. We now take a look at our list of edges, $G(E)$. These edges either connect two marked nodes, two unmarked nodes, or one marked node and an unmarked node. We find the lowest cost edge that connects a marked node and an unmarked node and add it to $T$. $T$ is now a MCST.\\
+	Runtime: $1^{st}$ BFS $O(|V| + |E|)$ * $2^{nd}$ BFS $O(|V| + |E|)$ * find min edge $O(|E|)$ * add lowest cost edge to $T\ O(|V| + |E|) = O(3|V| + 4|E|) = O(|V| + |E|)$ \\
+	\begin{proof}
+		Performing the first BFS on $T$ will tell us where node $e$ has the potential to be. We have two cases $e \in T$ and $e \not\in T$:\\
+		Case $e \not\in T$: If this is the case then $e$ was not originally in our MCST, so increasing the cost will not influence $T$.\\
+		Case $e \in T$: In this case, we find $e$ by looking at the vertices it connects. We update its weight and remove it which disconnects $T$, as there are no cycles in trees. We now have two sets of vertices, $V$ and $V'$. By marking the vertices of $V'$, we can detect the edges that are in this cut. A set of cut edges are those edges that if removed from $G$, they disconnect the graph into two distinct sets of vertices. By finding the smallest cut edge, we are able to connect $T$ with the smallest edge possible. This maintains $T$'s MCST property. 
+	\end{proof}
+\end{enumerate}
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

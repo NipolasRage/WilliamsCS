@@ -1,0 +1,94 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{2}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{4}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} W3029343
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+Answer Question 11 from Chapter Three of your text {\em Algorithm Design}.  In addition to designing the algorithm,
+justify its correctness and time and space requirements.\\
+\textbf{Solution}
+\begin{algorithm*}[h] 
+	\caption{determines whether a virus introduced at computer $a$ at time $x$ could have infected computer $b$ by time $y$} 
+	\begin{algorithmic}
+		\Function{Detection}{$C_{a}$,$x$,$C_{b}$,$y$, $m$}
+		\State let $G$ be an empty directed graph
+		\For{all triplets $(C_{i},C_{j},t_{k})$ in $m$}
+		\State $i \leftarrow$ node $(C_{i},t_{k})$ 
+		\State $j \leftarrow$ node $(C_{j},t_{k})$ 
+		\State add \{$i,j$\} and $\{j,i\}$ to $G$
+		\If{we have seen $C_{i}$ or $C_{j}$ before}
+		\State add $\{(C_{i},t_{o}),(C_{i},t_{k})\}$ and/or $\{(C_{j},t_{o}),(C_{j},t_{k})\}$ to $G$ where $o$ is the previous time
+		\EndIf
+		\EndFor
+		\State Travel to neighboring node reachable from $C_{a},t$ where $t\ge x$
+		\State run $BFS$ from this node
+		\If {we reach a node of the form $(C_{b},t)$ where $t \le y$}
+		\State\Return $True$
+		\EndIf
+		\State\Return $False$
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm*} \\
+In this algortithm, we build a graph $G$ that keeps track of the flow of the virus since every edge in $G$ points forward in time. We start looking through the graph once $C_{a}$ connects to another computer $C_{i}$. We also keep track of the computers $C_{i}$ interacts with and which computers those interact with. Eventually, a computer that has an edge between a $C_{j}, t_{j}$ and $C_{b},t_{j}$ where $x \le t_{j} \le y$. Thus, we will see if $C_{b}$ gets infected.\\
+Time requirement: Adding a node to $G$: $O(m)$ + BFS: $O(m)$ = $O(2m)$.\\
+Space requirement: $G$: $O(m)$
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

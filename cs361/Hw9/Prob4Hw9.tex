@@ -1,0 +1,65 @@
+% !TEX root = Hw9Template.tex
+
+
+(This is a big, long problem borrowed from K Schwarz of Stanford. Don't be scared. It really is not very hard, but the result is interesting.) 
+There are two classes of languages associated with Turing machines --- the recursively
+enumerable languages (RE), which can each be recognized by a Turing machine, 
+and the recursive languages (R), which can each be decided by a Turing machine.
+Why didn't we talk about a model of computation that accepted just the R languages and nothing else? After all, having such a model of computation would be useful --- if we could reason about automata that just accept recursive languages, it would be much easier to see what problems are and are not decidable.
+
+It turns out, interestingly, that there is no class of automata with this property, and in fact the only way to build automata that can decide all recursive languages is to have automata that also accept some languages that are RE but not R. This problem explores why.
+
+Suppose, for the sake of contradiction, that there is a type of automaton called a deciding machine (or DM for short) that has the computational power to decide precisely the R languages. That is, $L \in R$ iff there is a DM that decides L.
+We will make the following (reasonable) assumptions about deciding machines:
+\begin{itemize}
+\item Any recursive language is accepted by some DM, and each DM accepts a recursive language.
+\item Since DMs accept precisely the recursive languages, all DMs halt on all inputs. That is, all DMs are deciders.
+\item Since deciding machines are a type of automaton, each DM is finite and can be encoded as a string. For any DM D, we will let the encoding of D be represented by $\langle
+D \rangle$.
+
+\item DMs are an effective model of computation. 
+\end{itemize}
+
+Thus the Church-Turing thesis says that the Turing machine is at least as powerful as a DM. Thus there is some Turing machine UD that takes as input a description of a DM D and some string w, then accepts if D accepts w and rejects if D rejects w. Note that UD can never loop infinitely, because D is a deciding machine and always eventually accepts or rejects. More specifically, UD is the decider ``On input $\langle D, w \rangle$, 
+simulate the execution of D on w. If D accepts w, accept. If D rejects w, reject.''
+
+Unfortunately, these four properties are impossible to satisfy simultaneously.
+
+\begin{enumerate}
+\item Consider the language $REJECT_{DM} = \{ \langle D \rangle ~|~ D$ is a DM that rejects $ \langle D \rangle$ \}. Prove that $REJECT_{DM}$ is decidable.
+
+\item Prove that there is no DM that decides $REJECT_{DM}$.
+\end{enumerate}
+
+Your result from (b) allows us to prove that there is no class of automaton like the DM that decides precisely the R languages. If one were to exist, then it should be able to decide all of the R languages, including $REJECT_{DM}$. However, there is no DM that accepts the decidable language $REJECT_{DM}$. 
+
+Note: A word or two about what the impossible
+model of computation this problem talks about might look like may help you
+appreciate what it says.
+If used in simple ways (some might say appropriate ways), the header of a for loop
+makes it clear how often the loop will execute. That is, if you see something like
+\begin{quote}
+for ( int x = init; x $<$ max; x = x + increment ) \}
+\end{quote}
+you can compute (max - init)/increment to get the number of times you expect the loop
+to execute. In Java, C, or C++, your estimate may be wrong
+because code in a loop's body can
+modify x, max or increment. If, however, you imagine a language in which the compiler
+enforces a restriction that the body of a loop cannot do anything that might modify
+x, max, or increment, you could get a language where for loops could never lead
+to infinite loops. Then, all you would have to do is eliminate while loops and recursion
+to get a language in which it was impossible to write an infinite loop. This
+question shows that it would be impossible to write certain program that always
+terminate in such a language.
+
+
+\begin{solution}
+
+% Place your answers here
+\begin{enumerate}
+	\item [(a)] By the Churing-Thesis, we know there is some Turing machine UD that takes as input a description of a DM D and some string w, then accepts if D accepts w and rejects if D rejects w. Therefore, we can show $REJECT_{DM}$ by using UD in the following manner. It will take a description $\langle D \rangle $ and simulate $D$ on $\langle D \rangle$. Then, accept if $D$ rejects its own description, and reject if $D$ accepts its own description. More specifically, UD is the decider ``On input $\langle D, D \rangle$, 
+	simulate the execution of D on the description of D. If D accepts $\langle D \rangle$, accept. If D rejects $\langle D \rangle$, reject.''
+	\item For the sake of contradiction, assume there is a DM D that decides $REJECT_{DM}$. That is $L(D) = \{\langle M \rangle ~|~ M \mbox{ is a }DM\\ \mbox{ and } \langle M \rangle \notin L(M)\}$. Now, given that we can run $D$ on any DM, we can run $D$ on its own description. If $\langle D \rangle \notin L(D) \Longrightarrow \langle D \rangle \in L(D)$ and $\langle D \rangle \in L(D) \Longrightarrow \langle D \rangle \notin L(D)$. This is clearly a contradiction, so there is no DM that decides $REJECT_{DM}$.
+\end{enumerate}
+
+\end{solution}

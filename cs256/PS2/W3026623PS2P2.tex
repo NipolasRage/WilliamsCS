@@ -1,0 +1,97 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{2}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{2}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} W3023339
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+Give a linear time, that is $O(n)$-time, algorithm to find the diameter of a tree $T=(V,E)$.  Prove that your algorithm is correct.
+Suggestion.  Consider modifying recursive DFS so that it also computes, for each vertex $v$
+\begin{description}
+	\item{(a)} The diameter of the subtree of $T$ rooted at $v$
+	\item{(b)} The longest path from $v$ to a leaf in the subtree of $T$ rooted at $v$
+\end{description}
+Then show how, knowing this information for all children of some vertex $u$, we can determine this information for $u$ itself.
+(Why do you think we need to know both (a) and (b)?)
+  
+\textbf{Solution}\\
+\begin{algorithm*}[h] 
+	\caption{Diameter of tree $T$} 
+	\begin{algorithmic}
+		\Function{Diameter}{$T$}
+		\If{$T$ is $null$ or leaf} 
+		\Return (0,0)
+		\Else
+		\State let $S$ be an empty set
+		\ForAll{neighbors $v$ of $T$}
+		\State add $Diameter(v)$ to $S$
+		\EndFor
+		\State $B \leftarrow$ largest b in $S$ + 1
+		\State $A \leftarrow$ if sum of two largest b's $>$ largest a then b's else largest a
+		\State \Return $(A,B)$
+		\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm*} \\
+Base Case: if we have a tree of only one node, then its diameter is zero. This algorithm holds as this base case is addressed.\\
+Inductive Hypothesis: Assume this algorithm works for a tree $T$ of up to $k$ nodes, s.t. $k \in \mathbb{Z}, k\ge 1$. \\
+Inductive Step: Now, add a node to $T$ s.t. there are $k+1$ nodes in $T$. We can see that we can make a subtree containing the node we added. This subtree has less than $k+1$ nodes. According to our inductive hypothesis, this algorithm can compute the diameter of this subtree and we now need to compute the diameter for the larger subtree. The algorithm picks the diameter to be the two longest paths or the largest diameter from the root of the neighbors. This information allows us to assess whether the longest path from v to a leaf in the subtree of T rooted at v will form a larger diameter than that of the subtree, so it works for this subtree. Consequently, any other subtrees will have a diameter computed by the algorithm.\\
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

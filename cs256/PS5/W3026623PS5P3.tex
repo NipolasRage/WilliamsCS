@@ -1,0 +1,125 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+\usepackage{tikz}
+\usepackage{enumitem}
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{5}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{3}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+If you are familiar with matrix multiplication, you can skip down to \textbf{The Problem};
+otherwise read the next few paragraphs first.
+
+Given two vectors $u = (u_1, \ldots, u_n)$ and $v= (v_1, \ldots, v_n)$ the {\em dot product}
+(a.k.a. {\em inner product}) of $u$ and $v$ is given by
+$u \cdot v =  u_1 v_1 + \ldots + u_n v_n$.  Note that it takes $n$ scalar multiplications to compute the dot product of two vectors of length $n$.
+
+Now suppose that $A$ and $B$ are $n \times q$ and $q \times m$ matrices (arrays), respectively.  The {\em product} of $A$ and $B$ is the $n \times m$ matrix $P$ for which $P[i,j]$  is the dot product of row $i$ of $A$ with column $j$ of $B$.  Note that this is well-defined since the rows of $A$ and the columns of $B$ are all vectors of length $q$.  This operation is referred to as {\em matrix multiplication}.
+
+If you aren't familiar with matrix multiplication, don't worry.  Here are the only things you need to know to answer this question.
+\begin{itemize}
+	\item Computing the product $A B$ by directly using the definition above requires $n q m$ scalar multiplications: There are $n m$ entries, and each requires $O(q)$ multiplications to compute.
+	\item In general, $A B \not= B A$: Matrix multiplication is {\em not} commutative, so don't even try!
+	\item Matrix multiplication is {\em associative}: ((A B) C) = (A (B C)).  That is, a product $A_1 \ldots A_k$ can be parenthesized in any order without changing the value of the result. 
+\end{itemize}
+
+\textbf{The Problem}
+
+While the order of evaluation of a chain $A_1 \ldots A_k$ of matrices may not affect the value of the result, it can greatly affect the time required to compute the result!  For example.  If $A, B, C$ have sizes $3 \times 20$, $20 \times 4$ and $4 \times 10$ respectively, then 
+\begin{description}
+	\item{Computing $((A B) C)$} takes $3 \cdot 20 \cdot 4$ scalar multiplications for $A B$, which is a $3 \times 4$ matrix, plus $3 \cdot 4 \cdot 10$ scalar multiplications for multiplying $A B$ by $C$, giving a total of 240 + 120 = 360 scalar multiplications.
+	\item{Computing $(A (B C))$} takes $20 \cdot 4 \cdot 10$ scalar multiplications for $B C$, which is a $20 \times 10$
+	matrix, plus $3 \times 20 \times 10$ scalar multiplications for multiplying $A$ by  $(B C)$, giving a total of 800 + 600 = 1400 scalar multiplications.
+\end{description}
+
+So, consider a product $A_1 \ldots A_k$ of matrices where each $A_i$ has size $r_i \times c_i$.  Assume that $c_i = r_{i+1}$ for $i = 1 \ldots n-1$, so that the product of two consecutive matrices is well-defined.
+We call an order of evaluation (a particular parenthesizing) of the product $A_1 \ldots A_k$ {\em optimal} if it uses the minimum number of scalar multiplications.
+\begin{description}
+	\item{[a]} Design a dynamic programming algorithm to compute the number of scalar multiplications in an optimal order of evaluation for $A_1 \ldots A_k$.  Justify its correctness.
+	(Hint: Think about the final matrix multiplication that happens in the ordering.)
+	\item{[b]} Determine the time and space complexity of your algorithm.
+	\item{[c]} Describe how you would modify your algorithm to report the (or an) optimal order.  What is the complexity of this algorithm.
+\end{description}
+\textbf{Solution}\\
+We will have to find the final multiplication so that the number of scalar multiplications is minimized. We can think of a start matrix $A_{s}$ and an end matrix $A_{t}$ and figure out where we will last multiply. We must check every possible end multiplication of matrices from $s$ to $t$, and pick the one that minimizes multiplications. The following recurrence relation allows us to do that:\\ $opt[s,t] = \min _{s \le k \le t-1} (opt[s,k] + r_{s}*c_{k} * c_{t} + opt[k+1,t])$
+\begin{algorithm*}[h] 
+	\caption{computes the number of scalar multiplications in an optimal order of evaluation} 
+	\begin{algorithmic}
+		\Function {opt}{$s$,$n$}
+		\If {$s$ = $n$}
+		\State $opt[n,n] = 0$
+		\Else
+		\For {$k$ from $s$ to $n-1$}
+		\State $opt[n] = \min (opt[s,k] + r_{s}*c_{k} * c_{n} + opt[k+1,n]) $
+		\EndFor
+		\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm*}
+\begin{proof}
+	Base Case: Let our chain of matrices be $A_{1}$. We cannot multiply $A_{1}$ with any other matrix, so there are zero scalar multiplications. Since the start matrix and the end matrix are the same, then our algorithm will output zero. Thus, our algorithm holds for this case.\\
+	Inductive Hypothesis: Assume our algorithm outputs the minimized number of scalar multiplications of up to $k$ matrices for $k \ge 1$.\\
+	Inductive Step: We must show that our algorithm minimizes the number of scalar multiplications for $k+1$ matrices. We know that there must be a final matrix multiplication that happens in the ordering. This final multiplication can happen anywhere from the first matrix, to the $k+1$ matrix. We must divide our series of matrices into two and see which are the last two matrices we are multiplying. To do this, we find the most optimal solutions for every possible split of our series. Note that this split creates two series of size less than $k+1$. From our inductive hypothesis, we know that we have the optimal solution for these sub-problems. We then take the optimal solutions of these two series and add the number of multiplications involved in multiplying the last two martrices which is $ r_{1}*c_{j} * c_{k+1}$ where $j$ corresponds to the last matrix of the first sequence. We have combined both halves of our series so that the number of scalar multiplications is minimized. Thus, our algorithm works for all cases.
+\end{proof}
+b) Time Complexity: Split $O(n)$ * $n^{2}$ entries $O(n^{2})$ = $O(n^{3})$\\
+    Space Complexity: $O(n^{2})$\\
+c) Once we find a minimum split, we know that we cannot split any longer so we have a pair of matrices we are multiplying. Each grouping of matrices is adding parenthesis, so we just add parenthesis over our recursive calls.\\
+Run TIme: is still $O(n^{3})$\\
+Space: $O(n^{2})$
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

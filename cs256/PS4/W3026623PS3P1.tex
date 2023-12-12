@@ -1,0 +1,122 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{4}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{1}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+This question explores a data structure that supports a specific set of operations on an string of $n$ bits.
+Initially, all bits are set to $0$.
+Bits can then individually be set to $1$ (but not back to $0$), and the value of the $i^{th}$ bit can be obtained.
+As more bits are set to $1$, blocks of consecutive $1$s may be formed, separated by $0$s (or terminating at the ends of the string).  Specifically, the \emph{BitBlocks} data structure supports the following methods:
+\begin{itemize}
+	\item $Create(n)$: Initialize the data structure.
+	\item $SetToOne(i)$: Given an index $i$, set $i^{th}$ bit to $1$ (even if it already is $1$).
+	\item $GetValue(i)$: Given an index $i$, return the value of the $i^{th}$ bit.
+	\item $GetBlockSize(i)$: If $GetValue(i) = 1$, return the size of the block containing the $i^{th}$ bit; otherwise return $0$.
+\end{itemize}
+
+We would like to ensure that any sequence of these operations, beginning with the initializing of the data structure,
+will be highly efficient. In particular, we'll allow $Create$ to take $O(n)$ time, but require any subsequent sequence
+of $SetToOne$, $GetValue$, and $GetBlockSize$ operations to be very fast.  The data structure should be of size no
+worse than $O(n)$.
+
+\begin{description}
+	\item[(a)] Describe an implementation of the \emph{BitBlocks} data structure based on a Union-Find data structure.
+	Include descriptions of the implementations of the four methods defined above.
+	\item[(b)] Prove that the methods of your data structure work as specified above.
+	\item[(c)] Analyze the time and space complexity of your data structure and each of its methods.
+	In particular, state and prove a result analogous to statement (4.23) [page 153] of your text.
+algorithm correctly solves the problem in this amount of time.
+\end{description}  
+\textbf{Solution}
+\begin{enumerate}
+	\item Assume sets can have repeating values s.t. a set $\{1,1,1,1\}$ is a valid set.
+	\begin{enumerate}
+		\item $Create(n):$ set up the array Component and initialize it to $Component[i] = I$ where $I$ is a name for a set $\{0\}$ for all $i$ up to $n$.
+		\item $SetToOne(i):$ do the equivalent of $Find(i)$ to find the name of the set containing $i$. If this set corresponds to an initial set $\{0\}$, set its element to 1 and if there is an adjacent set in Collection containing a block of 1's then do the equivalent to $Union(A,B)$ where $A$ is the set containing $i$ and $B$ is such adjacent block set. Now, if there is another block set adjacent to our union, we call $Union$ on the adjacent set and on our union. Otherwise, if the set containing $i$ is already a set containing 1's, then leave as is. 
+		\item $GetValue(i)$ find the name for set containing the $i^{th}$ bit, and return the value of the first element in that set.
+		\item $GetBlockSize(i)$ find the name of the set containing the $i^{th}$ bit. If the first element is a zero, return 0, else return the size of the set. 
+	\end{enumerate}
+	\item 
+	\begin{enumerate}
+		\item Creating an array Component of size $n$ initializes the data structure.
+		\item Calling $Find(i)$ will return the name of the set $s$ containing $i$ because of how Union-Find is implemented. If $s=\{0\}$, this means we have not yet called $SetToOne(i)$ on it. Now, we have two further cases: this set is adjacent to two blocks (...1111\underline{0}1111...) or this set is adjacent to only one block (...1111\underline{0}0000....). In the first case, we must $Union$ the set $s$ to one of its adjacent set after changing its value to 1 and $Union$ the result to the other adjacent set. This will merge both blocks and include $i$. In the latter case, we only change $s$ to $\{1\}$ and $Union$ it to its adjacent block set to extend the block. Finally, if $s \ne \{0\}$, then $s$ must represent a block of 1's of at least size one. In this case, there is nothing to change.
+		\item If the $i^{th}$ bit happened to be a 1, then it would be part of a set containing a block of 1's due to our implementation of $SetToOne(i)$. Otherwise, if the $i^{th}$ bit happened to be a 0 then the set name at its position would reference a set of the form $\{0\}$. In both cases, the first element of the set corresponds to the value of $i$. 
+		\item The implementation of $SetToOne(i)$ separates our data structure into sets containing blocks of 1's and sets containing just zero. Thus, if the name of the set at position $i$ references a set of a block of 1's, we return the size of said set. Otherwise, the set references a set of $\{0\}$ and the size of the block is zero. 
+	\end{enumerate}
+	\item Claim: Consider the Union-Find implementation of the \emph{BitBlocks} data structure for some string $S$ of size $n$, where unions keep the name of the larger set. The $GetValue(i)$ and $GetBlockSize(i)$ operations take $O(1)$ time, $Create(n)$ takes $O(n)$ time, and any sequence of $k$ $SetToOne(i)$ operations takes at most $O(k log k)$ time.
+	\begin{proof}
+		$GetValue(i)$ and $GetBlockSize(i)$ take $O(1)$ time because looking up in an array takes constant time. $Create(n)$ takes $O(n)$ because building and populating an array of $n$ elements takes time proportional to the number of elements. Now we must consider $SetToOne(i)$:
+		\begin{itemize}
+			\item The first time $SetToOne(i)$ refers to a set, pay the set \$1.
+			\item Every time $SetToOne(i)$ changes the set name of a set, pay the set \$1.
+			\item We must show that after $k$ $SetToOne(i)$ operations, total payout is at most \$$O(k log k)$.
+			\item $SetToOne(i)$ only renames the smaller set.
+			\item So every time we pay \$1 to a set, increased the size of the set by at most twice.
+			\item So if a set had its name changed $d$ times, it now has
+			size at most $2d$.
+			\item But $2d \leq 2k$ so $d\leq log(2k)$.
+			\item Thus each set got paid at most \$$log(2k)$ and at most $2k$ sets were paid.
+			\item So total payout is $2k ∗ log(2k) = O(k log k)$
+		\end{itemize}
+	\end{proof}
+\end{enumerate}
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

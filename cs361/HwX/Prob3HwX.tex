@@ -1,0 +1,35 @@
+% !TEX root = HwXTemplate.tex
+Complete problem 7.26 in Sipser:
+
+Let $\phi$ be a 3CNF-fomula. An $\ne$-{\em{\bf assignment}} to the variable of $\phi$ is one where
+each clause contains two literals with unequal truth values. In other words, an $\ne$-{assignment} satisfies
+$\phi$ without assigning three true literals in any clause.
+\begin{enumerate}
+\item Show that the negation of any $\ne$-{assignment} to $\phi$ is also an $\ne$-{assignment}.
+\item Let $\ne${$SAT$} be the collection of 3CNF-formulas that have $\ne$-{assignment}s. Show that
+we obtain a polynomial time reduction from $3SAT$ to $\ne${$SAT$} by replacing each clause $c_i$
+\[
+(y_1 \vee y_2 \vee y_3)
+\]
+with the two clauses
+\[
+(y_1 \vee y_2 \vee z_i) \mbox{ and } (\overline{z_i} \vee y_3 \vee v)
+\]
+where $z_i$ is a new variable for each clause $c_i$ and $v$ is a single additional new variable.
+
+\item Conclude that $\ne${$SAT$} is NP-complete. (Hint: Given parts (a) and (b) this step should be
+trivial.)
+\end{enumerate}
+Note: This problem depends on material we will not cover in class until Monday 11/27.
+
+
+
+\begin{solution}
+
+% Place your answers here
+\begin{enumerate}
+	\item Let $\bar{\phi}$ be the negation of an $\ne$-{assignment} to the variable $\phi$. We know that $\phi$ has at least one false literal for every clause. Thus, $\bar{\phi}$ must have at least one true literal for every clause. If this literal is not negated, then the clause is true. Also, we know that $\phi$ has at least one true literal for every clause, so $\bar{\phi}$ must have at least one false literal for every clause. Therefore, if this literal is negated then the clause must be true. $\bar{\phi}$ is also a valid $\ne$-{assignment} since its literals are just a negation of another $\ne$-{assignment}. We can conclude that every clause in $\bar{\phi}$ is true, so $\bar{\phi}$ is an $\ne$-{assignment}.
+	\item Suppose we have an assignment that satisfies a $3SAT$ formula $\phi$. We can construct a $\ne${$SAT$} assignment $\phi'$ in the following way. Let every literal of $\phi$ be unchanged. Then, let every $z_i = \overline{(y_1 \vee y_2)}$ where $y_1 \mbox{ and } y_2$ are the final value of the literal after negation or not. We know that these clauses satisfy an $\ne${$SAT$} assignment. We also know these clauses are true, because if both $y_1$ and $y_2$ are false, then $z_i$ will be true. Also, let $v$ be false all throughout the formula. If $y_3$ is false then either $y_1$ or $y_2$ must be true, so $z_i$ must be false. Therefore, $\bar{z_i}$ must be true. This second clause also satisfies an $\ne${$SAT$} assignment because even if both $\bar{z_i}$ and $y_3$ are true, $v$ will always be false. All in all, neither clause will have all true literals and will have an $\ne${$SAT$} assignment, so such construction exists.
+\end{enumerate}
+
+\end{solution}

@@ -1,0 +1,103 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Midterm \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\ProblemNumber}{2}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+
+\textbf{Solution}
+\\a) \begin{algorithm*}[h] 
+	\caption{given $S$ and $d$ finds a $d$-net of $S$ of minimum size} 
+	\begin{algorithmic}[1] 
+		\REQUIRE An array of integers $S$ sorted in ascending order and a positive integer $d$
+		\STATE where $S=\{s_{1}<s_{2}<...<s_{n}\}$
+		\medskip 
+		\STATE Let $R$ be an empty set
+		\STATE $r \leftarrow$ 0
+		\FOR {$s_{i}\leftarrow s_{2}\mbox{ to } n$ } 
+		\IF {$s_{i} > s_{1} + d$}
+		\STATE add $s_{i-1}$ to $R$ \COMMENT {finds the first element of $R$}
+		\STATE $break$
+		\ENDIF
+		\ENDFOR
+		\FOR {$s_{i}\leftarrow s_{2}\mbox{ to } n$ }
+		\IF {$abs(R[r]-s_{i})>d$}
+		\STATE add $s_{i}$ to $R$
+		\STATE $r\leftarrow r + 1$
+		\ENDIF
+		\ENDFOR
+		\RETURN $R$
+		
+	\end{algorithmic} 
+\end{algorithm*} 
+\\Time Complexity: Find the first element of $R:\ O(n)$ + build $R:O(n) = O(n)$ \\
+Space Complexity: $R = O(n)$\\
+\begin{proof}
+	We claim that this greedy method will find a $d$-net of $S$ of minimum size. Let $W = \{w_{1}, w_{2},...,w_{m}\}$ be any $d$-net of $S$ of minimum size where $m\le n$. Assume that the greedy algorithm produces $R = \{r_{1},r_{2},...,r_{k}\}$ where $k\le n$. If $k = m$ then our greedy algorithm found a $d$-net of $S$ of minimum size. We will show that $k=m$.\\
+	We know that the first item in the $d$-net of $S$ must be within $d$ distance away from $s_{1}$. By finding the largest element in $S$ that falls within this distance, we make sure that $r_{1}$ maximizes the distance to $s_{1}$ which minimizes $|R|$. It must be the case that $w_{1}-s_{1}$ is also close to zero. Now, assume inductively that or some $j \ge 1$, we have $r_{t}\ge w_{t}$, for each $t\le j$. If $j = m$, we are done. So, suppose $j < m$ and consider $w_{j+1}$ and $r_{j+1}$. We know that $w_{j} \le r_{j}$, and our greedy algorithm will pick the next integer that is more than $d$ away from $r_{j}$, so it must be the case that $r_{j+1}\ge w_{j+1}$. Thus, our greedy algorithm maximizes the distance between elements of $R$ and $S$.
+\end{proof}
+b) The first element $a_{1}$ of our $d-$ approximation for $S$ $A$ will be $s_{1} + d$ and the last element $a_{k}$ will be $s_{n}-d$ if $s_{n}$ is not within $d$ units away from $s_{1} + d$. If $s_{n}$ is within $d$ units away from $a_{1}$ then we simply return $A=\{a_{1}\}$. Otherwise, we walk through $S$ and see if $s_{i}$ falls within distance of either $a_{1}$ or $a_{k}$. If it does, we move on to $s_{i+1}$. If it does not, we add $s_{i} + d$ to $A$ and set it as the lower bound for comparison. Meaning that we will check if $s_{i+1}$ falls within $d$ units of $s_{i} + d$ or $a_{k}$ and so on.\\
+Time Complexity: Determine $a_{1}$ and potential $a_{k}$: $O(n)$ + Walk through $S: O(n)$ * add to $A: O(n) = O(n)$\\
+Space complexity: $A: O(n)$\\
+\begin{proof}
+	We claim that this greedy method will find a $d-$approximation of $S$ of minimum size. Let $B =  \{b_{1}, b_{2},...,b_{m}\}$ be a minimum size $d-$approximation of $S$ where $m\le n$. Assume our greedy algorithm produces $A=  \{a_{1}, a_{2},...,a_{k}\}$ where $k\le n$. If $k = m$ then our greedy algorithm found a $d$-approximation of $S$ of minimum size. We will show that $k=m$.\\
+	Clearly, $a_{1}\ge b_{1}$ since our algorithm makes sure $a_{1}$ is furthest away from $s_{1}$. It is crucial that $a_{i} \ge b_{i}$ for some $i \le k$ as it shows that we are maximizing the distance between $a_{i}$ and the corresponding element of $S$, the greater distance will require less elements in $A$. Assume, inductively, that for some $j\ge 1$, we have $a_{j}\ge b_{j}$. If $j=m$, we are done as our greedy solution is of same size as an optimal solution. Now, suppose $j < m$ and consider $a_{j+1} \mbox{ and } b_{j+1}$. We know $a_{j}\ge b_{j}$ and our greedy algorithm will pick an $a_{j+1}$ so that it is as far away from the next $s_{i}$ that does not satisfy $|s_{i}-a_{j}|\le d$. Thus, $a_{j+1}\ge b_{j+1}$ so our greedy solution is optimal.
+\end{proof}
+c) Let $r = |R|$ and $a=|A|$.\\
+Claim: $a\le r\le 2a$.
+\begin{proof}
+	First, we will prove that $a\le r$. $a$ could be smaller than $r$, because $A \not\subset S$ meaning that there is more freedom when picking elements of $A$. Restricting $R$ to being a subset of $S$ limits the possible elements of $R$ and some choices are not maximizing distance. Also, $a$ could be equal $r$ as you can just find a $d-$approximation of $S$ of minimum size by running the algorithm to find a $d-$net of $S$ of minimum size. 
+	\\Now, we will show that $r\le 2a$. If $R\cap A = \{\}$, then no element $r\in R$ is able to maximize distance the same way all elements $a\in A$ do. This means that for all $a$, $R$ must contain an element $r_{i} < a$ and an element $r_{j} > a$ such that $|r_{i}-s_{l}|\le d$,  $|r_{i}-s_{l+1}| > d$, and $|r_{j}-s_{l+1}|\le d$ for some integer $l$. Also if $R\cap A \ne \{\}$, then it follows that an element of $S$ is optimal for maximizing the distance for some elements in $S$.\\
+	Therefore, since $a\le r$ and $r\le 2a$, then $a\le r\le 2a$.
+\end{proof}
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

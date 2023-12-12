@@ -1,0 +1,74 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Final \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\ProblemNumber}{4}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+
+\textbf{Solution}
+\\ The algorithm terminates since at least one vertex becomes tight after each iteration of the while loop. Given sufficient iterations of the while loop, all vertices will be tight and we will have some properly colored edges. Let $C$ be the set of all properly colored edges produced upon the termination of the algorithm. In order to show that Approx3Color is a 3/2-approximation algorithm for MAX-3-COLOR, we can show that Approx3Color properly colors at least 2/3 of all edges. We show $|C| \ge \frac{2}{3}|E|$. We can derive the following statements:
+\begin{itemize}
+	\item $|C| = \frac{1}{2}\sum_{v\in V}deg_{j}(v)$, where $j\in \{r,g,y\}, j\ne f(v)$.
+	\item $\sum_{v\in V}deg_{j}(v) \ge \sum_{v\in V}deg_{f(v)}(v)$, because all of our vertices are tight.
+	\item $\frac{1}{2}\sum_{v\in V}deg_{f(v)}(v) \ge \frac{1}{3}\sum_{v\in V}deg(v)$, because there are three possible colors and nonproperly colored edges must form at least a third of the edges.
+	\item $\sum_{v\in V}deg(v) = 2|E|$
+\end{itemize}
+We can put it all together as such:
+\begin{gather}
+|C| = \frac{1}{2}\sum_{v\in V}deg_{j}(v) \ge \frac{1}{2}\sum_{v\in V}deg_{f(v)}(v) \ge \frac{1}{3}\sum_{v\in V}deg(v) = \frac{2}{3}|E|\\
+2|C| \ge \frac{2}{3}\sum_{v\in V}deg(v) = \frac{4}{3}|E|\\
+|C| \ge \frac{2}{3} |E|
+\end{gather}
+Time Complexity: $O(|E|)$ because the algorithm has to find a color $j$ such that $deg_{j}(v)< deg_{f(v)}(v)$ and at most $|E|$ edges need to be checked * $O(|V|^{2})$ as some formerly tight neighborhood might no longer be tight after an iteration of the while loop $=O(|V|^{2}|E|)$.\\
+Space Complexity: $O(|V|+|E|)$\\
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

@@ -1,0 +1,84 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{4}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{2}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+Suppose you are choosing between the following three algorithms:
+\begin{enumerate}
+	\item Algorithm A solves problems by dividing them into five subproblems of half the size, recursively solving each subproblem, and then combining the solutions in linear time.
+	\item Algorithm B solves problems of size $n$ by recursively solving two subproblems of size $n-1$ and then combining the solutions in constant time.
+	\item Algorithm C solves problems of size $n$ by dividing them into nine subproblems of size $n/3$, recursively solving each subproblem, and then combining the solutions in $O(n^{2})$ time.
+\end{enumerate}
+What are the running times of each of these algorithms (in asymptotic notation) and which would you choose?\\
+\textbf{Solution}
+\begin{enumerate}
+	\item $T(n)=5T(\frac{n}{2})+cn = O(n^{\log _{2}5})$
+	\item $T(n)=2T(n-1)+c = O(2^{n})$ as every step makes two recursive calls of size $n-1$. If we think about this as a tree, $n-1$ eventually approaches zero and $2^{n}$ leaves are created. 
+	\item $T(n)=9T(\frac{n}{3}) + cn^{2} = O(n^{2}\log n)$
+\end{enumerate}
+I would choose Algorithm C as $2^{n}>n^{\log _{2}5}$ because exponentials grow quicker than polynomials and $n^{\log _{2}5} > n^{2}\log n$ as:\\
+\begin{gather*}
+\lim_{n\to\infty}\frac{n^{2}\log n}{n^{\log _{2}5}}\\
+\lim_{n\to\infty}\frac{\log n}{n^{0.32}} = 0
+\end{gather*}
+Polynomials grow quicker than logarithmic functions.
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

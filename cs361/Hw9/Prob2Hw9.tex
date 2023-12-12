@@ -1,0 +1,32 @@
+% !TEX root = Hw9Template.tex
+
+%LOOK IN PROBLEM SOLUTION FILE FOR IDEAS FOR NEW PROBLEMS.
+
+Consider the language:
+
+$CONTAINSPAL_{TM} =$
+	\[  \{ \langle M \rangle ~|~ M \mbox{ is a TM and } ww^R \in L(M) \mbox{ for some } w \in \Sigma_M^* \}
+	\]	
+	Determine whether this language is decidable, undecidable but recognizable, not recognizable but has a recognizable complement or that neither the language or its complement is recognizable. Justify your conclusion.
+	
+\begin{solution}
+
+% Place your answers here
+This language is recognizable. To show this, we will first show that $CONTAINSPAL_{TM}$ is recognizable, and then show its complement is not recursively enumerable. Using dovetailing we can enumerate all strings over $\Sigma_M^*$. We run $M$ on every string over the machine's alphabet. Then, f $M$ rejects a string, then we ignore it. If $M$ accepts a string, then we run the reversed of that string on $M$. Now, if this also gets accepted by $M$ then we know $ww^R \in L(M)$, so we accept the machine. However, if we cannot find such string, then we will keep simulating strings on $M$ infinitely without accepting $M$. Thus, this language is recognizable.
+
+Now, assume that $\overline{CONTAINSPAL_{TM}}$ is recognized by\\ $M_{\overline{CONTAINSPAL_{TM}}}$ and construct a machine $M_{\overline{A_{TM}}}$ that behaves as follows:
+\begin{enumerate}
+	\item [1]On input $\langle M,w \rangle$:
+	\begin{enumerate}
+		\item 	[1.1] Construct a description, $\langle M' \rangle $, of a TM $M'$ that behaves as
+		follows:\\
+		On input $w'$, simulate $M$ on input $w$ and:
+		\item [i]. accept $w'$ if $M$ accepts $w$.
+		\item [ii]. otherwise reject $w’$ or loop.
+		\item [1.2] Run $M_{\overline{CONTAINSPAL_{TM}}}$ on $\langle M' \rangle $ ( and accept if it does ).
+	\end{enumerate}
+	\item [2] If the input is not of the form $\langle M,w \rangle$, accept
+\end{enumerate}
+We know that $\overline{A_{TM}}$ is not recursively enumerable so our assumption that $\overline{CONTAINSPAL_{TM}}$ is recognizable must be wrong. Thus, $\overline{CONTAINSPAL_{TM}}$ is not recursively enumerabke, so $CONTAINSPAL_{TM}$ must be recognizable.
+
+\end{solution}

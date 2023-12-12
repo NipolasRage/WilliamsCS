@@ -1,0 +1,137 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{4}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{3}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+An array $A[1\ldots n]$ is said to have a {\em majority element} if \textbf{more than half} of its entries are the same.  Given an array , the task is to design an efficient algorithm to tell whether the array has a majority element, and, if so, to find that element.  The elements of the array are not necessarily from some ordered domain like the integers, and so there can be no comparisons of the form $A[i] > A[j]$.  You should think of the array elements as, say, JPEG files.  However, you {\em can} answer questions of the form:  $A[i] = A[j]$ in $O(1)$ time.
+
+\begin{enumerate}
+	\item [(a)] Show how to solve this problem in $O(n \log n)$ time.  \textbf{Hint:}  split the array $A$ into two arrays $A_{1}$ and $A_{2}$ of half the size.  Does knowing the majority elements of $A_{1}$ and $A_{2}$ (if such elements exist) help you figure out the majority element of $A$?  If so, can you use a divide-and-conquer approach?  Be sure to prove that your algorithm is correct (via induction) and give a recurrence for the running time of your algorithm.
+	
+	\item [(b)] Can you design a linear-time algorithm?  \textbf{Hint:}  arbitrarily pair up the elements of the array.  For each pair, if the two elements are different, discard both of them; if they are the same, keep just one of them.  Show that after this procedure executes, there are at most $n/2$ elements left, and that they have a majority element if $A$ does.
+	
+\end{enumerate}
+\textbf{Solution}
+\begin{algorithm*}[h] 
+	\caption{A} 
+	\begin{algorithmic}
+		\Function{Majority}{$A$}
+
+		\If{$A$ has only one element} 
+		\State \Return ($A[1]$,1)
+		\Else
+		\State $A_{1}\leftarrow$ first half of $A$
+		\State $A_{2}\leftarrow$ second half of $A$
+		\State $majority_{1} \leftarrow Majority(A_{1})$
+		\State $majority_{2} \leftarrow Majority(A_{2})$
+		\State if either subarray does not have a majority, then $A$ does not have a majority
+		\For {$i$ in $A_{2}$}
+		\If {$i == majority_{1}[0]$}
+		\State increase the count of $majority_{1}$
+		\EndIf
+		\EndFor
+		\For {$i$ in $A_{1}$}
+		\If {$i == majority_{2}[0]$}
+		\State increase the count of $majority_{2}$
+		\EndIf
+		\EndFor
+		\If {$majority_{1}[0] == majority_{2}[0]$}
+		\State \Return $majority_{1}[0]$ and sum of their counts 
+		\ElsIf {both majorities have the same count}
+		\State We do not have a majority
+		\Else
+		\State \Return the majority with highest count if count  $> n/2$
+		\EndIf
+		\EndIf
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm*} \\
+\begin{proof}
+	Base Case: If our array $A$ has one element, then such element is more than half of its entries. Also, our algorithm will return this element as well. The algorithm holds for this case.\\
+	Inductive Hypothesis: Assume our algorithm works for an array of size $i$ where $1 \le i \le k$ for some integer $k$.\\
+	Inductive Step: Let $A$ be an array of size $k+1$. We must show our algorithm returns the correct majority for $A$. Based on our inductive hypothesis, the algorithm returns the correct majority (if one exists) of each half, $A_{1}$ and $A_{2}$, of $A$ as the halves are of size less than $k+1$. If it is the case that either subarray does not have a majority, then $A$ does not have a majority. Let us see the case where both $A_{1}$ and $A_{2}$ have majorities. We must see if $A_{1}$'s majority is an element of $A_{2}$ and vice versa. If we see said elements in the other array then we update their count in $A$ accordingly. Now, if $A_{1}$ and $A_{2}$ have the same majority, then it is the case that $A$ has the same majority, so we aggregate their count. However, if both majorities are different but have the same count then either majority cannot be a majority of $A$ as their count will not be over half of the elements of $A$. Now, we check if the majority with the larger count occurs more than twice the size of $A$. If so, we return the larger majority.
+\end{proof}
+	$T(n) = 2T(\frac{n}{2}) + cn$
+\begin{algorithm*}[h] 
+	\caption{B} 
+	\begin{algorithmic}
+		\Function{Majority}{$A$}
+		\State arbitrarily pair up the elements of the array
+		\For {each pair $(i,j)$ in $A$}
+		\If {$i \ne j$}
+		\State Discard them both
+		\Else 
+		\State Discard one of them
+		\EndIf
+		\EndFor
+		\State Check if $Majority$ of the rest of $A$ is a majority in $A$.
+		\State if so, return it
+		\EndFunction
+	\end{algorithmic}
+\end{algorithm*}
+\begin{proof}
+	Suppose $A$ has a majority. This means that the majority $m$ occurs more than $n/2$ times. If $m$ is paired with itself, then there will be more pairs of $m$ than of any other element. If $m$ is paired with other elements, then minorities and some elements $m$ will be thrown out but pairs of $m$ will remain as there are more than $n/2$ $m$'s. This subarrays has the same majority the original array. We must see if a candidate majority is the actual majority by running through the array and seeing if it occurs more than half of the time. 
+	Run Time: $O(n) + O(n) = O(n)$
+\end{proof}
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

@@ -1,0 +1,20 @@
+% !TEX root = Hw11Template.tex
+
+\begin{solution}
+
+% Place your answers here
+\begin{itemize}
+	\item [a]) This language is decidable. If $l$ is greater than the pumping length $p$, then we check to see if $\langle M \rangle \in ALL_{DFA}$. If so, then $\langle M \rangle \in $ LorBIGGER$_{DFA}$. This is because all strings larger than the pumping length will eventually loop down to strings within the pumping length. We know $ALL_{DFA}$ is decidable.\\
+	Now, if $0 \le l \le p$ then we check to see if all strings from length $l$ to $p$ are in the language of $M$. If they are then we make sure that there are no transitions from a state further than $l$ transitions away from the start state to a state that is within $l$ steps from the start state that has a path to a reject state. If so, then $\langle M \rangle \in $ LorBIGGER$_{DFA}$. 
+	\item [d]) If a Turing Machine rejects a finite number of inputs, then it belongs to BIG-ENUF$_{TM}$ as $l$ will equal one more than the length of the largest rejected string. However, if a Turing Machine rejects infinitely many inputs then no such $l$ exists. Now, Consider the computable function
+	\begin{align*}
+		f(w) &= w \mbox{ if w is not a valid TM description}\\
+		&= M' \mbox{ if } w =\langle M \rangle
+	\end{align*}
+	where $M'$ is a machine identical to $M$ except its reject state leads to a sink state where all future inputs with the same prefix are rejected.\\
+	This function shows that $ALL_{TM} \le_m $ BIG-ENUF$_{TM}$ because if $M$ accepts all input, then $M'$ will behave identically to $M$ and accept all inputs. This leads to $l = 0$ as all strings over $\Sigma^*_{M'}$ will be accepted, so $\langle M' \rangle \in $ BIG-ENUF$_{TM}$. On the other hand, if $M$ rejects some input, $M'$ will reject all inputs with that as a prefix, making the number of rejected inputs infinite so $\langle M' \rangle \notin $ BIG-ENUF$_{TM}$.\\
+	At the same time, $f$ shows that $\overline{ALL_{TM}} \le_m $ $\overline{\mbox{BIG-ENUF}_{TM}}$ .\\
+	We know that neither $ALL_{TM}$ nor $\overline{ALL_{TM}}$ is recognizable. Therefore, we can conclude that neither BIG-ENUF$_{TM}$ nor $\overline{\mbox{BIG-ENUF}_{TM}}$ is recognizable.
+\end{itemize}
+
+\end{solution}

@@ -1,0 +1,20 @@
+%!TEX root = Hw9Template.tex
+
+Use mapping reductions to show  that neither the language
+	\[
+	TOTAL_{TM} = \{ \langle M \rangle ~|~ M \mbox{ is a TM that halts on all inputs} \}	
+	\]
+	nor its complement is recognizable. (Hint: Feel free to think about how to solve this problem
+	without using a mapping reduction. Then, later you can figure out how to convert your
+	``free-style'' proof into one using mapping reductions.)
+
+
+\begin{solution}
+
+% Place your answers here
+We will show that $TOTAL_{TM}$ is not recognizable by showing that $ALL_{TM} \le_{M} TOTAL_{TM}$. To do this, we need a mapping that will take any $\langle M \rangle$ to another Turing machine description $\langle M' \rangle$ in such a way that all $N' \in L(M')$ halt on all inputs if and only if for all $N\in L(M), ~ L(N) = \Sigma_M^*$. Consider the function $f(\langle M \rangle) = \langle M' \rangle$ where $M'$ is identical to $M$ except that all of its reject states make the machine loop forever. This means that if a machine $M \in ALL_{TM}$ then it has reached accept states in $M$ for all inputs, meaning that no reject states have been reached in $M'$. Thus, $M'$ halts on all inputs. Now, if $M'$ halts on all inputs, then this means that no input went to a reject state and looped forever, so $M'$ must accept all inputs over its alphabet. Given that we know that $ALL_{TM}$ is not recognizable, we can conclude that $TOTAL_{TM}$ is not recognizable.\\
+Similarly, we can show that $\overline{TOTAL_{TM}}$ is not recognizable by showing that $\overline{ALL_{TM}} \le_{M} \overline{TOTAL_{TM}}$. We would need a mapping that will take any $\langle M \rangle$ to another Turing machine description $\langle M' \rangle$ in such a way that for all $N' \in L(M')$ there exists at least an input that makes the machine loop infinetely if and only if for all $N\in L(M), ~ L(N) \ne \Sigma_M^*$. Consider the same function $f$. If a machine $N$ does not contain all of the strings of $\Sigma_M^*$ then it must reject an input. Thus, $N'$ will reach a reject state and loop infinetely. Now, if a machine $N'$ does not halt on at least one input, then we know that input reached a reject state, so the machine's language does not contain all strings over that alphabet. Given that we know that $\overline{ALL_{TM}}$ is not recognizable, we can conclude that $\overline{TOTAL_{TM}}$ is not recognizable either.
+
+
+
+\end{solution}

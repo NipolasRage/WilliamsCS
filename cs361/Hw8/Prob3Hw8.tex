@@ -1,0 +1,31 @@
+% !TEX root = Hw8Template.tex
+
+There are five remaining problem statements for this assignment. Each of the remaining problems describes
+a question informally. Three of these questions are decidable and two are not. For each of the questions
+that is decidable, you should formulate the question as a language and then argue that there is a Turing
+machine that decides this language. You don't have to turn in anything for the other two questions.
+To ensure that it is clear which questions you are answering, make sure that the number of each problem
+you decide to answer is clearly visible on the page(s) containing your answer. 
+
+For example, if one of the questions below was ``Does the language of a given 
+finite automaton contain a specific string $w$?'' and you believed that this language
+was decidable (it is!), you would formulate this as the language
+\[
+A_{DFA} = \{ \langle D, w \rangle \,|\, \mbox{$D$ is a DFA that accepts $w$}\}
+\]
+and then explain how a Turing machine could use the description of $D$ provided on its input
+to simulate $D$ on $w$ and determine whether it reached a final state.
+
+\item
+\begin{quote}
+Given a Turing machine $M$ whose encoding requires $l$ symbols, does $M$ run for at least $l$
+steps on all possible inputs?
+\end{quote}
+
+\begin{solution}
+
+% Place your answers here
+$A_{STEP} = \{\langle M \rangle ~|~ M \mbox{ is a Turing Machine and } M \mbox{ runs for at least } |\langle M \rangle|$ steps for a given input$\}$.\\
+We can build a turing machine that simulates $M$ on all inputs of length up to $|\langle M \rangle|$. If $M$ accepts or rejects any strings before $|\langle M \rangle|$ steps then we reject the machine. However, if $M$ does not halt at $|\langle M \rangle|-1$ steps for any input up to length $|\langle M \rangle|$, then we accept the machine. This is because all subsequent strings have one of the tested strings as a prefix, so they must take at least $|\langle M \rangle|$ steps.
+
+\end{solution}

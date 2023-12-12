@@ -1,0 +1,47 @@
+\documentclass[10pt]{article}
+% Set things up for nice headers and footers
+\usepackage{fancyhdr}
+\usepackage{graphics}
+\usepackage{hyperref}
+\usepackage{tikz}
+\pagestyle{fancy}
+\usepackage{amsmath}
+
+\begin{document}
+
+\newcommand{\HwNumber}{11}
+
+%Set the headers and footers
+\lhead{CS 361}
+\chead{Williams College}
+\cfoot{}
+\lfoot{Final}
+\rfoot{\thepage}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\newcommand{\problem}[1]{
+\rhead{Problem #1}
+\item
+\input{Prob#1Hw\HwNumber.tex}
+\newpage
+}
+
+\newcommand{\longform}[1]{}
+
+\newenvironment{solution}{\begin{quote}}{\end{quote}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%   ENTER YOUR NAME AS INDICATED IN THE 
+%   NEXT LINE
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\chead{1574425}
+
+
+\begin{enumerate}
+\problem{1}
+
+\problem{2}
+
+\end{enumerate}
+
+\end{document}

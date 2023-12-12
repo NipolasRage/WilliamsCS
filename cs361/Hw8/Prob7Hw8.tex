@@ -1,0 +1,14 @@
+%!TEX root = Hw8Template.tex
+
+\begin{quote}
+Given a DFA $D$, does it always accept $w^R$ if it accepts $w$? 	
+\end{quote}
+
+
+\begin{solution}
+
+% Place your answers here
+$A_{DFA^R} = \{\langle D \rangle ~|~ D \mbox{ is a DFA where } w \in L(D) \Longrightarrow w^R\in L(D)\}$\\
+This language is decideable. Given a DFA $D$, we have proven in class that we can construct a DFA $D'$ where $L(D) = L, L(D') = L^R = \{w ~|~ w^R \in L\}$. Since having a string $w \in L$ implies that $w^R\in L$, we can say $L^R \subseteq L$, and $L^R \cap \bar{L} = \emptyset$. We know regular languages are closed under intersection and complement, so we can build a DFA $D^*$ that recognizes $L^R \cap \bar{L}$. If the language of $D^*$ is empty, then we know that $D$ accepts $w^R$ if it accepts $w$. We showed in class that building a turing machine that determines if a DFA is empty is decidable. Thus, we can build a turing machine that given $\langle D \rangle$, it builds $D^*$, and accepts $D$ if it determines that the language of $D^*$ is empty.
+
+\end{solution}

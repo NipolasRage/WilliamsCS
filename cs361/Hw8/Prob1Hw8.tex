@@ -1,0 +1,30 @@
+% !TEX root = Hw8Template.tex
+
+Let $C \subseteq \Sigma_C^{*}$ be a language.  
+Prove that $C$ is Turing-recognizable if and only if a Turing-decidable language 
+$D \subseteq \Sigma_D^{*}$ exists such that 
+\[
+C = \{ x \,|\, \mbox{there exists $y$ such that $x \# y  \in D$ } \}.
+\]
+where $\#$ is a delimiter symbol such that $\# \notin \Sigma_C$ but
+$\# \in \Sigma_D$.
+
+You should think of $y$ as acting as a {\em witness} to $x$'s membership in $C$.
+
+Hint: The next problem is provided as a hint for this problem and vice versa.
+
+\begin{solution}
+
+% Place your answers here
+To prove the forward direction, suppose we have a turing machine $M_D$ that recognizes the language $D$ such that 
+\[
+C = \{ x \,|\, \mbox{there exists $y$ such that $x \# y  \in D$ } \}.
+\]
+We can build a turing machine $M_C$ that recognizes $C$ in the following way. For an input $x$ on $M_C$, we make the turing machine generate all strings $y\in \Sigma^*$. Now, for every $y$ generated, we run $x\#y$ on $M_D$. If $M_D$ accepts a $x\#y$, then $M_C$ accepts $x$. On the other hand, if $M_D$ does not accept a given $x\#y$, then we try another $y$ until one is accepted. We know $M_D$ must halt because $D$ is Turing-decidable, and if no possible $x\#y$ is accepted by $M_D$ then $M_C$ does not halt on input $x$. Thus, $M_C$ would not recognize that $x$. \\
+\\
+To prove the backwards direction, suppose we have a turing machine $T_C$ that recognizes the language $C$, that is $L(T_C) = C$. We can build a turing machine that decides a language $D$ such that
+\[
+D = \{x\#b(n) ~|~ x\in C \mbox{ and  } n \ge 0\}
+\]
+$b(n)$ is a string representation of how many steps it takes $T_C$ to recognize $x$. To build such turing machine $T_D$, we take the input $x\#b(n)$ and run $x$ on $T_C$. If $T_C$ halts within $n$ steps and accepts $x$, then $T_D$ accepts $x\#b(n)$. However, if $T_C$ would take more than $n$ steps on input $x$, then we know the machine could possibly not recognize $x$ and not halt. Since $T_D$ only does up to $n$ steps, it decides $D$.
+\end{solution}

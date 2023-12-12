@@ -1,0 +1,100 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,algorithmic,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+
+
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{2}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{1}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with:} W3023339
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Problem}
+
+There's a natural intuition that two nodes that are far apart in a communication network---separated by many hops---have a more tenuous connection than two nodes that are close together.  There are a number of algorithmic results that are based to some extent on different ways of making this notion precise.  Here's one that involves the susceptibility of paths to the deletion of nodes.
+
+Suppose that an $n$-node undirected graph $G=(V,E)$ contains two nodes $s$ and $t$ such that the distance between $s$ and $t$ is strictly greater than $n/2$.  Show that there must exist some node $v$, not equal to either $s$ or $t$, such that deleting $v$ from $G$ destroys all $s-t$ paths.  In other words, the graph obtained from $G$ by deleting $v$ contains no path from $s$ to $t$.  Give an algorithm with running time $O(m+n)$ to find such a node $v$.  Describe your algorithm in prose and prove that it works correctly.  Make sure your algorithmic description is clear and concise.  As a hint, imagine performing a breadth-first search from $s$.  How large is each layer $L_{i}$ along the way to $t$?  
+  
+\textbf{Solution}\\
+Since the distance between $s$ and $t$ is strictly greater than $n/2$, then the majority of the nodes of $G$ have to be on the path from $s$ to $t$. Consequently, a minority of the nodes of $G$ are not on the path from $s$ to $t$. In a BFS representation of $G$ starting from $s$ we will get that at least $n/2\ +1$ nodes are on the path from $s$ to $t$, and at most $n/2\ -1$ nodes are not on the path from $s$ to $t$. This means that there must be a layer of the path that is of size one, since the path has the majority of the nodes. The node in this layer is $v$, because removing it will disconnect $G$. \\
+\begin{algorithm*}[h] 
+	\caption{Finds $v$ given a valid $G$} 
+	\begin{algorithmic}[1] 
+		\REQUIRE $n$-node undirected graph $G=(V,E)$ contains two nodes $s$ and $t$ such that the distance between $s$ and $t$ is strictly greater than $n/2$.
+		\medskip 
+		\STATE Mark all $v \in V$ as unvisited
+		\STATE Let $T$ be an empty graph
+		\STATE Add $r$ to $T$; mark $r$ as visited; $r.level \leftarrow 0$
+		\STATE $currentLevel \leftarrow 0$
+		\STATE $levelCount \leftarrow 0$
+		\STATE Let $candidate$ be a node
+		\WHILE{There are $visited$ vertices} 
+		\STATE{$current$ $\leftarrow$ some $visited$ vertex having minimum level} 
+		\STATE{Mark $current$ as explored}
+		\FOR{$unvisited$ neighbors $v$ of $current$} 
+		\STATE {Add $\{current,v\}$ to $T$} 
+		\STATE {Mark $v$ as $visited$}
+		\STATE{$v.level \leftarrow current.level + 1$}
+		\IF{$currentLevel$ does not equal $v.level$} 
+		\IF{$levelCount$ equals 1} \RETURN {$candidate$} \ELSE \STATE{$levelCount\leftarrow 1$ } \STATE{$candidate \leftarrow v$}\STATE {$currentLevel \leftarrow v.level$}\ENDIF
+		\ELSE \STATE{$levelCount \leftarrow levelCount + 1$} \ENDIF
+		\ENDFOR
+		\ENDWHILE
+	\end{algorithmic} 
+\end{algorithm*} \\
+This algorithm uses BFS to traverse $G$ and form its representation in $T$. When adding a node to $T$, my algorithm checks if this node is the first node added of its level. If it is, then it checks the total number of nodes in the previous level. If there is only one node in the previous level, then that node is returned. If there were multiple nodes in the previous level then we start counting the number of nodes in the current level and repeat the process.\\
+BFS will reach every node in $G$, assuming it is a connected graph, so the potential node $v$ will be reached. When adding a node in the level that follows $v.level$, we will see that $v.level$ contains $v$ and only $v$. This is recognized as the note whose deletion from $G$ destroys all $s-t$ paths.
+
+
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}

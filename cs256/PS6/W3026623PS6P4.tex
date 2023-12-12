@@ -1,0 +1,79 @@
+\documentclass[10pt]{article}
+
+% DO NOT EDIT THE LINES BETWEEN THE TWO LONG HORIZONTAL LINES
+
+%---------------------------------------------------------------------------------------------------------
+
+% Packages add extra functionality.
+\usepackage{times,graphicx,epstopdf,fancyhdr,amsfonts,amsthm,amsmath,algorithm,xspace,hyperref}
+\usepackage[left=1in,top=1in,right=1in,bottom=1in]{geometry}
+\usepackage{sect sty}	%For centering section headings
+\usepackage{enumerate}	%Allows more labeling options for enumerate environments 
+\usepackage{epsfig}
+\usepackage[space]{grffile}
+\usepackage{algpseudocode}
+
+% This will set LaTeX to look for figures in the same directory as the .tex file
+\graphicspath{.} %The dot means current directory.
+
+\pagestyle{fancy}
+
+\lhead{\WilliamsID}
+\chead{Problem Set \PSNumber \ --- Problem \ProblemNumber}
+\rhead{\today}
+\lfoot{CSci 256: Algorithm Design}
+\cfoot{\thepage}
+\rfoot{Spring 2018}
+
+% Some commands for changing header and footer format
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headwidth}{\textwidth}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% These let you use common environments
+\newtheorem{claim}{Claim}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{observation}{Observation}
+\newtheorem{question}{Question}
+
+\setlength{\parindent}{0cm}
+\usepackage{tikz}
+\usepackage{enumitem}
+%---------------------------------------------------------------------------------------------------------
+
+% DON'T CHANGE ANYTHING ABOVE HERE
+
+% Edit below as instructed
+\newcommand{\WilliamsID}{W3026623}	% Put you Williams ID in the braces
+\newcommand{\PSNumber}{6}			% Put the problem set # in the braces
+\newcommand{\ProblemNumber}{4}		% Put the problem # in the braces
+\newcommand{\ProblemHeader}{Problem \ProblemNumber}	% Don't change this
+
+\begin{document}
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{I collaborated with: TA} 
+
+
+\vspace{\baselineskip}	% Add some vertical space
+\textbf{Solution}\\
+Using Ford–Fulkerson on a network flow $G=(V,E)$, we can build a residual graph using the following rules, where $e=(u,v)\in E, e^{R}=(v,u),$ flow $f(e)$, capacity $c(e)$: \begin{gather*}
+c_{f}(e) = \left\{\begin{array}{lr}
+c(e)-f(e), & \text{if } e\in E\\
+f(e), & \text{if } e^{R}\in E\\
+\end{array}\right\} 
+\end{gather*}
+Now, grab all the vertices reachable from $s$ in the residual graph. These vertices are $upstream$. Then, switch the direction of every edge in $G$, and grab all the vertices reachable from $t$ in the residual graph. These vertices are $downstream$. All the remaining vertices are $central$.\\
+Time Complexity: $O(|E||V|C)$\\
+Space Complexity: $O(|E|+|V|)$\\
+\begin{proof}
+	Let $A$ be the set of all vertices reachable from $s$ in the residual graph of a network flow $G$. Let $U$ be the set of all $upstream$ vertices.\\
+	Claim: $A = U$.\\
+	In order to show $A=U$, we must show $U\subseteq A$ and $A\subseteq U$. We know $A$ is a min-cut because all edges not reachable from $s$ have maximum flow and are not part of a min-cut, thus all $upstream$ vertices are in $A$ (7.9 in the book). Therefore, $U\subseteq A$. Now, assume a vertex $v\in A$ is $downstream$. This means that $v$ is always on the sink side of every min-cut. However, we know $v$ is reachable from $s$. This is a contradiction, so $v$ is $upstream$ and $A\subseteq U$. We have showed that $U\subseteq A$ and $A\subseteq U$ which implies $A = U$.
+\end{proof}
+%End of feedback section
+
+% DO NOT DELETE ANYTHING BELOW THIS LINE
+\end{document}
